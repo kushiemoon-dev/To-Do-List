@@ -21,3 +21,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::get('tasks', [TaskController::class, 'list']);
+
+Route::get('tasks/{id}', [TaskController::class, 'getSingleTask'])->where('id', '[0-9]+');
+
+Route::post('tasks', [TaskController::class, 'createTask']);
+
+Route::put('tasks/{id}', [TaskController::class, 'updateTask'])->where('id', '[0-9]+');
+
+Route::delete('tasks/{id}', [TaskController::class, 'deleteTask'])->where('id', '[0-9]+');
+
+
+
