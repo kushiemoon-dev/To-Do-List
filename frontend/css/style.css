@@ -11,9 +11,9 @@
   --color-neutral-subtle: rgb(239, 239, 239);
   --color-neutral-muted: rgba(44, 44, 44, 0.5);
   --color-border-subtle: rgba(44, 44, 44, 0.1);
-  --color-success-subtle: #29ffcc;
+  --color-success-subtle: #ff2982;
   --color-danger-subtle: #ffac92;
-  --color-attention-subtle: #ffcd29;
+  --color-attention-subtle: #ff29db;
   --color-shadow-medium: 0 5px 0 rgba(44, 44, 44, 0.10);
   --color-btn-primary-bg: rgb(44, 44, 44);
   --color-btn-primary-text: #ffffff;
