@@ -1,6 +1,6 @@
 const app = {
     init: function() {
-        console.log('init');
+        tasksList.init();
     }
 };
 
