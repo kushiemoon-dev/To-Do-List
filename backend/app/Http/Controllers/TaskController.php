@@ -9,14 +9,14 @@ class TaskController extends Controller
 {
     public function list()
     {
-        $tasks = Task::all();
+        $tasks = Task::with('category')->get();
 
         return $tasks;
     }
 
     public function getSingleTask($id)
     {
-        $task = Task::find($id);
+        $task = Task::find($id)->load('category');
 
         if (!$task) {
             return response()->json(['message' => 'Task not found'], 404);
