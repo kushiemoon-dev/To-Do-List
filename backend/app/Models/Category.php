@@ -9,6 +9,9 @@ class Category extends Model
 {
     use HasFactory;
 
+    /**
+     * Get the tasks for the category.
+     */
     public function tasks()
     {
         return $this->hasMany(Task::class);

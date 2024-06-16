@@ -9,6 +9,9 @@ class Task extends Model
 {
     use HasFactory;
 
+    /**
+     * Get the category that owns the task.
+     */
     public function category()
     {
         return $this->belongsTo(Category::class);

@@ -2,64 +2,108 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use App\Models\Task;
+
 
 class TaskController extends Controller
 {
     public function list()
     {
+
         $tasks = Task::with('category')->get();
+
 
         return $tasks;
     }
 
     public function getSingleTask($id)
     {
+
         $task = Task::find($id)->load('category');
 
-        if (!$task) {
-            return response()->json(['message' => 'Task not found'], 404);
-        }
+        if (isset($task)) {
 
-        return $task;
+            return $task;
+
+
+        } else {
+
+            return response('', 404);
+        }
     }
+
 
     public function createTask(Request $request)
     {
-        $task = new Task();
-        $task->title = $request->title;
-        $task->status = $request->status;
-        $task->save();
 
-        return response()->json(['message' => 'Task created'], 201);
+        if ($request->filled('title')) {
+
+
+            $request->validate([
+                'title' => 'min:3|max:255'
+            ]);
+
+
+            $title = $request->input('title');
+
+            $newTask = new Task();
+
+            $newTask->title = $title;
+
+            if ($newTask->save()) {
+
+                return response()->json(Task::find($newTask->id), Response::HTTP_CREATED);
+            } else {
+
+                return response('', Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            return response('', Response::HTTP_BAD_REQUEST);
+        }
     }
 
-    public function updateTask(Request $request, $id)
+    public function updateTask(Request $request, int $id)
     {
-        $task = Task::find($id);
 
-        if (!$task) {
-            return response()->json(['message' => 'Task not found'], 404);
+        $taskToUpdate = Task::find($id);
+
+
+        if ($taskToUpdate !== null) {
+
+            if ($request->filled('title')) {
+
+                $taskToUpdate->title = $request->input('title');
+
+                if ($taskToUpdate->save()) {
+
+                    return response('', Response::HTTP_NO_CONTENT);
+                } else {
+                    return response('', Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+            } else {
+                return response('', Response::HTTP_BAD_REQUEST);
+            }
+        } else {
+
+            return response('', Response::HTTP_NOT_FOUND);
         }
-
-        $task->title = $request->title;
-        $task->status = $request->status;
-        $task->save();
-
-        return response()->json(['message' => 'Task updated'], 200);
     }
 
-    public function deleteTask($id)
+    public function deleteTask(int $id)
     {
-        $task = Task::find($id);
+        $taskToDelete = Task::find($id);
 
-        if (!$task) {
-            return response()->json(['message' => 'Task not found'], 404);
+
+        if ($taskToDelete === null) {
+            return response('', Response::HTTP_NOT_FOUND);
         }
 
-        $task->delete();
-
-        return response()->json(['message' => 'Task deleted'], 200);
+        if ($taskToDelete->delete()) {
+            return response('', Response::HTTP_NO_CONTENT);
+        } else {
+            return response('', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
